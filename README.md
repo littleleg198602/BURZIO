@@ -1,16 +1,16 @@
-# Forex MVP Platform (Task 1 Scaffold)
+# Forex MVP Platform (Tasks 1-2)
 
 MVP scaffold for a **multi-asset forex backtesting + paper-trading platform (H1)** using **MT5 CSV data**.
 
 ## Current status
 
-✅ **Task 1 only**: project scaffold and foundational structure are implemented.
+✅ Task 1: project scaffold and modular architecture are in place.  
+✅ Task 2: MT5 CSV parsing + normalization layer is implemented.
 
 Not implemented yet:
-- real backtest engine logic
-- MT5 normalization pipeline
-- portfolio/risk algorithms
-- live paper execution logic
+- backtesting engine logic
+- strategy execution loop
+- paper trading runtime
 - dashboard analytics wiring
 
 ## Setup
@@ -42,72 +42,63 @@ streamlit run src/dashboard/app.py
 pytest
 ```
 
-## Project structure overview
+## Task 2: MT5 parser + normalizer
 
-```text
-project_root/
-  README.md
-  pyproject.toml
-  .gitignore
-  .env.example
-  configs/
-    app_config.example.yaml
-  data/
-    raw/
-    normalized/
-  examples/
-    sample_mt5_format.md
-  logs/
-  src/
-    __init__.py
-    main.py
-    config/
-      __init__.py
-      loader.py
-    data/
-      __init__.py
-      mt5_parser.py
-      normalizer.py
-      schemas.py
-    engine/
-      __init__.py
-      backtest_engine.py
-      execution_model.py
-      events.py
-    strategies/
-      __init__.py
-      base_strategy.py
-      ma_crossover.py
-      breakout.py
-      signals.py
-    portfolio/
-      __init__.py
-      portfolio_manager.py
-      position_sizer.py
-      risk_manager.py
-    paper/
-      __init__.py
-      paper_runner.py
-      state_store.py
-      file_watcher.py
-    reporting/
-      __init__.py
-      metrics.py
-      equity.py
-      exports.py
-    dashboard/
-      __init__.py
-      app.py
-    utils/
-      __init__.py
-      logging_setup.py
-      time_utils.py
-      paths.py
-  tests/
-    __init__.py
-    test_sanity.py
+### Supported MT5 CSV variants
+- Delimiters: `,`, `;`, `\t` (auto-detected, or explicit override).
+- Datetime formats:
+  - combined datetime column (`DateTime`, `Time`, `Timestamp` variants)
+  - separate `Date` + `Time` columns
+- Symbol source:
+  - from CSV `Symbol` column
+  - inferred from filename (e.g. `EURUSD_H1_sample.csv`)
+  - explicit `symbol=` argument
+
+### Normalized schema
+Output is normalized to these columns (exact order):
+- `time` (pandas datetime64)
+- `symbol` (upper-case string)
+- `open`
+- `high`
+- `low`
+- `close`
+- `volume` (float)
+- `spread` (float, default `0.0` if missing)
+- `source_file` (string)
+- `row_id` (sequential int)
+
+Sorted by `symbol, time`.
+
+### Validation included
+- required column checks
+- OHLC logical checks (`low <= open/high/close <= high`)
+- duplicate timestamp detection per symbol
+- non-monotonic timestamp detection
+- H1 gap summary (invalid gaps + missing bar estimate)
+
+### Limitations (current)
+- Weekend/session-aware gap filtering is **not** implemented yet.
+- Broker-specific exotic exports may require adding extra column aliases.
+
+### Quick usage
+
+```python
+from src.data.normalizer import normalize_from_csv, load_multiple_mt5_csvs
+
+# Single file
+norm = normalize_from_csv("examples/data_samples/EURUSD_H1_sample.csv")
+
+# Multiple files
+combined = load_multiple_mt5_csvs([
+    "examples/data_samples/EURUSD_H1_sample.csv",
+    "examples/data_samples/GBPUSD_H1_sample_semicolon.csv",
+])
 ```
+
+## Examples
+- `examples/sample_mt5_format.md`
+- `examples/data_samples/`
 
 ## Next planned step
 
-➡️ **Task 2**: implement MT5 CSV parser + normalization mapping and validations.
+➡️ **Task 3**: strategy interface + first strategy signal pipeline integration.
