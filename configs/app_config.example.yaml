@@ -1,0 +1,29 @@
+app:
+  name: "Forex MVP Platform"
+  env: "dev"
+  log_level: "INFO"
+
+data:
+  raw_dir: "data/raw"
+  normalized_dir: "data/normalized"
+  mt5_glob: "*.csv"
+  timeframe: "H1"
+
+backtest:
+  initial_balance: 10000
+  base_currency: "USD"
+  slippage_bps: 1.0
+
+risk:
+  max_open_positions: 5
+  max_risk_per_trade: 0.01
+  max_daily_drawdown: 0.03
+
+paper:
+  enabled: false
+  polling_seconds: 10
+  state_file: "data/paper_state.json"
+
+dashboard:
+  host: "127.0.0.1"
+  port: 8501
