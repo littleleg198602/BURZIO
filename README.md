@@ -108,3 +108,40 @@ combined = load_multiple_mt5_csvs([
 ## Next planned step
 
 ➡️ **Task 3**: strategy interface + first strategy signal pipeline integration.
+
+## Task 4: Single-symbol backtest engine
+
+### What is supported now
+- single-symbol backtest on normalized H1 OHLC data
+- Task 3 signal ingestion (`time,symbol,signal,strategy`)
+- LONG/SHORT execution
+- stop-loss / take-profit exits
+- opposite-signal close behavior (default: close only, no auto-reverse)
+- deterministic trade log + equity curve + basic metrics
+
+### Execution assumptions (no look-ahead)
+- signal is observed at bar close `T`
+- entry/exit decision is filled on next bar open `T+1`
+- SL/TP are evaluated intrabar using bar high/low
+- if both SL and TP are touched in one bar, conservative rule is used: **SL first**
+
+### Current limitations
+- single symbol only (multi-asset portfolio layer is Task 5)
+- fixed quantity sizing
+- SL/TP distances are absolute price distances (no pip conversion yet)
+
+### Minimal usage snippet
+
+```python
+from src.engine import BacktestConfig, BacktestEngine
+from src.strategies import MACrossoverStrategy
+
+signals = MACrossoverStrategy(short_window=5, long_window=20).generate_signals(data)
+result = BacktestEngine(BacktestConfig()).run(data, signals, strategy_name="ma_crossover")
+
+print(result.trades.head())
+print(result.equity_curve.tail())
+print(result.metrics)
+```
+
+➡️ **Task 5**: multi-asset portfolio and allocation layer.
