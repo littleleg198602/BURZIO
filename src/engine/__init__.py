@@ -1,3 +1,4 @@
+<<<<<<< codex/add-quantconnect-portfolio-testing-zut3eo
 """Backtesting engine package."""
 
 from .backtest_engine import BacktestConfig, BacktestEngine, BacktestResult, Position, TradeRecord
@@ -13,3 +14,6 @@ __all__ = [
     "ExecutionConfig",
     "ExitReason",
 ]
+=======
+"""Backtesting engine package placeholders."""
+>>>>>>> main
