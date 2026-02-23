@@ -93,6 +93,10 @@ class PaperRunner:
                 break
             time.sleep(self.config.poll_interval_seconds)
 
+    def run_forever(self) -> None:
+        """Run polling loop indefinitely."""
+        self.run(max_loops=None)
+
     def run_once(self) -> PaperRunSummary:
         """Run one polling/process cycle."""
         files = discover_symbol_files(self.config.input_dir, self.config.symbols or None)
@@ -337,10 +341,8 @@ class PaperRunner:
     def _persist_artifacts(self) -> None:
         trades_df = pd.DataFrame(self.state.trades)
         equity_df = pd.DataFrame(self.state.equity_curve)
-        if not trades_df.empty:
-            export_trades_csv(trades_df, self.config.trades_path)
-        if not equity_df.empty:
-            export_equity_csv(equity_df, self.config.equity_path)
+        export_trades_csv(trades_df, self.config.trades_path)
+        export_equity_csv(equity_df, self.config.equity_path)
 
         Path(self.config.positions_path).parent.mkdir(parents=True, exist_ok=True)
         Path(self.config.positions_path).write_text(json.dumps(self.state.open_positions, indent=2), encoding="utf-8")

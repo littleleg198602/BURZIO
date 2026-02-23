@@ -59,6 +59,8 @@ def test_run_once_idempotent_and_resume(tmp_path) -> None:
     summary1 = runner.run_once()
     trades_after_first = len(runner.state.trades)
     assert summary1.processed_bars > 0
+    assert (tmp_path / "trades.csv").exists()
+    assert (tmp_path / "equity.csv").exists()
 
     summary2 = runner.run_once()
     assert summary2.processed_bars == 0
