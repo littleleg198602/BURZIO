@@ -217,3 +217,27 @@ python -m src.paper.paper_runner
 - simplified forex sizing/PnL model inherited from Task 5
 
 ➡️ **Task 7**: dashboard integration and paper monitoring UI.
+
+
+## Task 7: Streamlit dashboard integration
+
+### What dashboard supports now
+- Backtest mode: configure strategy + risk/execution params, run portfolio backtest, and view metrics/equity/trades/rejections.
+- Paper Monitor mode: read persisted paper artifacts (state/events/status/positions/trades/equity) and visualize current status + event stream.
+- Robust handling of missing artifacts with clear empty-state messages.
+
+### Run dashboard
+```bash
+streamlit run src/dashboard/app.py
+```
+
+### Paper Monitor artifact inputs
+- required for full view: `state.json`, `paper_events.ndjson`, `latest_status.json`, `current_positions.json`, `paper_trades.csv`, `paper_equity.csv`
+- dashboard still loads safely when some files are absent
+
+### Current limitations
+- manual refresh workflow (no websocket push)
+- no live MT5 execution controls
+- simplified forex sizing/PnL assumptions inherited from Tasks 5–6
+
+➡️ **Task 8**: live bridge preparation and operator controls.
