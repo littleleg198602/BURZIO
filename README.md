@@ -30,6 +30,12 @@ pip install -e .[dev]
 python -m src.main
 ```
 
+### Nejjednodušší spuštění (1 soubor)
+
+```bash
+python run.py
+```
+
 ### Streamlit dashboard placeholder
 
 ```bash
