@@ -1,0 +1,67 @@
+app:
+  name: "Forex MVP Platform"
+  env: "dev"
+  log_level: "INFO"
+
+data:
+  raw_dir: "data/raw"
+  normalized_dir: "data/normalized"
+  mt5_glob: "*.csv"
+  timeframe: "H1"
+
+backtest:
+  initial_balance: 10000
+  base_currency: "USD"
+  slippage_bps: 1.0
+
+risk:
+  max_open_positions: 5
+  max_risk_per_trade: 0.01
+  max_daily_drawdown: 0.03
+
+paper:
+  enabled: true
+  mode: "polling"
+  input_dir: "data/raw"
+  poll_interval_seconds: 10
+  symbols: ["EURUSD", "GBPUSD"]
+  timeframe: "H1"
+  bar_confirmation_lag: 1
+  state_backend: "json"
+  state_path: "data/paper/state.json"
+  events_log_path: "logs/paper_events.ndjson"
+  trades_path: "logs/paper_trades.csv"
+  equity_path: "logs/paper_equity.csv"
+  positions_path: "logs/current_positions.json"
+  status_path: "logs/latest_status.json"
+  max_loops: null
+  process_historical_on_start: false
+
+  initial_capital: 100000
+  stop_loss_distance: 0.0020
+  take_profit_distance: 0.0040
+  allow_reversal_on_opposite_signal: false
+
+  use_data_spread: true
+  fixed_spread: 0.0
+  slippage: 0.0
+
+  risk_per_trade_pct: 0.01
+  min_units: 0.0
+  max_units: null
+  fallback_fixed_units: 10000
+
+  max_open_trades: 3
+  max_risk_per_trade_pct: 0.02
+  max_portfolio_risk_pct: 0.05
+  max_drawdown_guard_pct: 0.20
+
+strategy_runtime:
+  strategy_name: "ma_crossover"
+  params:
+    short_window: 5
+    long_window: 20
+
+dashboard:
+  host: "127.0.0.1"
+  port: 8501
