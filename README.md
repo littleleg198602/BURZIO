@@ -44,6 +44,16 @@ python run.py
 streamlit run src/dashboard/app.py
 ```
 
+### MT5 startup snapshot (optional)
+
+If you have MetaTrader 5 terminal open and want the app to pull Market Watch bars at startup, enable `mt5_live.enabled: true` in config and run:
+
+```bash
+python run.py
+```
+
+This writes CSV snapshots into `mt5_live.output_dir` (default `data/raw`) and dashboard symbol picker can then load them.
+
 ### Tests
 
 ```bash

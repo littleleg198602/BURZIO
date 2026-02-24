@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 
 from src.config.loader import load_app_config
+from src.data.mt5_live import export_from_app_config
 from src.utils.logging_setup import setup_logging
 from src.utils.paths import ensure_runtime_directories
 
@@ -23,6 +24,13 @@ def main() -> None:
 
     logger.info("Starting Forex MVP Platform scaffold.")
     logger.info("Loaded config from: %s", config_path)
+    try:
+        exported = export_from_app_config(config)
+        if exported:
+            logger.info("MT5 startup export wrote %s file(s) into data directory.", len(exported))
+    except Exception as exc:
+        logger.warning("MT5 startup export skipped: %s", exc)
+
     logger.info("Task 1 scaffold is ready.")
 
 

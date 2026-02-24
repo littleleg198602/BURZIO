@@ -62,6 +62,13 @@ strategy_runtime:
     short_window: 5
     long_window: 20
 
+mt5_live:
+  enabled: false
+  output_dir: "data/raw"
+  timeframe: "H1"
+  bars: 500
+  symbols: []  # empty = all visible Market Watch symbols
+
 dashboard:
   host: "127.0.0.1"
   port: 8501
