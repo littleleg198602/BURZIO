@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "forex-mvp-platform"
+version = "0.1.0"
+description = "MVP scaffold for multi-asset forex backtesting and paper trading with MT5 CSV data."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+  { name = "BURZIO Team" }
+]
+dependencies = [
+  "pandas>=2.0",
+  "numpy>=1.25",
+  "pyyaml>=6.0",
+  "streamlit>=1.30",
+  "matplotlib>=3.8",
+  "watchdog>=4.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+]
+
+[tool.setuptools]
+package-dir = {"" = "."}
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
