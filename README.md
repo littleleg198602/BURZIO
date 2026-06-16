@@ -11,12 +11,36 @@ Data se ukládají do SQLite, aby se dala opakovaně používat bez duplicit. Pi
 
 > Projekt je pouze analytický. Neobchoduje a negeneruje obchodní pokyny.
 
-## Instalace
+## Nejjednodušší spuštění na Windows
+
+V kořenové složce projektu dvakrát klikni na:
+
+```bat
+Spustit_Yahoo_Analyzer.bat
+```
+
+Tenhle spouštěč sám vytvoří lokální složku `.venv`, do ní nainstaluje potřebné knihovny a spustí Streamlit web. Ručně tedy nemusíš psát instalační příkazy do terminálu. Při prvním spuštění to může chvíli trvat, další spuštění už jen otevře aplikaci.
+
+Zachovaný kratší alias:
+
+```bat
+run_streamlit.bat
+```
+
+## Ruční instalace, pokud ji chceš dělat sám
+
+Otevři terminál v kořenové složce projektu, tedy ve složce, kde je `pyproject.toml`.
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate
+.venv\Scripts\activate
 pip install -e .
+```
+
+Na macOS/Linux aktivuj prostředí takto:
+
+```bash
+source .venv/bin/activate
 ```
 
 Pro vývojové testy:
@@ -25,7 +49,27 @@ Pro vývojové testy:
 pip install -e '.[dev]'
 ```
 
-## Spuštění
+## Streamlit aplikace ručně
+
+```bash
+python -m streamlit run src/streamlit_app.py
+```
+
+Streamlit otevře lokální webovou aplikaci, kde zadáš tickery, cestu k SQLite databázi, cestu k Excel výstupu a klikneš na **Spustit analýzu**.
+
+Alternativní Python spouštěč:
+
+```bash
+python run_streamlit.py
+```
+
+Na macOS/Linux můžeš použít:
+
+```bash
+./run_streamlit.sh
+```
+
+## CLI spuštění bez webového rozhraní
 
 ```bash
 python -m src.main
@@ -41,3 +85,4 @@ python -m src.main --db data/news_impact_yahoo.sqlite --output data/news_impact_
 
 - SQLite databáze s tabulkami `prices`, `news`, `reactions` a `phrase_stats`
 - Excel soubor s listy pro jednotlivé tickery a souhrnným listem `PHRASE_STATS`
+- Streamlit náhled statistik frází, detailů tickeru a tlačítko pro stažení Excelu
