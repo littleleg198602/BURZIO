@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from openpyxl import load_workbook
+
 from src.database import Database
 from src.excel_exporter import export_excel
 from src.phrase_stats import calculate_phrase_stats
@@ -40,3 +42,8 @@ def test_reactions_phrase_stats_and_excel_export(tmp_path: Path) -> None:
     output = tmp_path / "analysis.xlsx"
     export_excel(db, ("TEST",), str(output))
     assert output.exists()
+    workbook = load_workbook(output)
+    assert workbook.sheetnames[0] == "NAVOD"
+    assert workbook["TEST"][1][0].value == "Ticker"
+    assert workbook["TEST"][1][5].value == "Reakce +1 den"
+    assert workbook["PHRASE_STATS"][1][4].value == "Průměrný výnos"

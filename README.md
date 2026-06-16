@@ -84,5 +84,6 @@ python -m src.main --db data/news_impact_yahoo.sqlite --output data/news_impact_
 ## Výstup
 
 - SQLite databáze s tabulkami `prices`, `news`, `reactions` a `phrase_stats`
-- Excel soubor s listy pro jednotlivé tickery a souhrnným listem `PHRASE_STATS`
+- Excel soubor s listem `NAVOD`, listy pro jednotlivé tickery a souhrnným listem `PHRASE_STATS`
+- České popisky v Excelu: `Reakce +1 den`, `Průměrný výnos`, `Úspěšnost růstu`, `Skóre jistoty`
 - Streamlit náhled statistik frází, detailů tickeru a tlačítko pro stažení Excelu
