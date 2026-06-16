@@ -45,5 +45,19 @@ def test_reactions_phrase_stats_and_excel_export(tmp_path: Path) -> None:
     workbook = load_workbook(output)
     assert workbook.sheetnames[0] == "NAVOD"
     assert workbook["TEST"][1][0].value == "Ticker"
-    assert workbook["TEST"][1][5].value == "Reakce +1 den"
+    assert workbook["TEST"][1][4].value == "Fráze"
+    assert workbook["TEST"][1][10].value == "Reakce +1 den"
+    assert workbook["TEST"][1][15].value == "Impact score"
     assert workbook["PHRASE_STATS"][1][4].value == "Průměrný výnos"
+
+
+def test_excel_explains_empty_phrase_stats(tmp_path: Path) -> None:
+    db = Database(tmp_path / "empty.sqlite")
+    output = tmp_path / "empty.xlsx"
+
+    export_excel(db, ("TEST",), str(output))
+
+    workbook = load_workbook(output)
+    phrase_sheet = workbook["PHRASE_STATS"]
+    assert phrase_sheet[2][0].value == "INFO"
+    assert "Zatím není co spočítat" in phrase_sheet[2][2].value

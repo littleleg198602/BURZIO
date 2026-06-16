@@ -22,7 +22,7 @@ def main() -> None:
         tickers_text = st.text_input("Tickery", value=", ".join(DEFAULT_TICKERS))
         db_path = Path(st.text_input("SQLite databáze", value=str(DEFAULT_DB_PATH)))
         excel_path = Path(st.text_input("Excel výstup", value=str(DEFAULT_EXCEL_PATH)))
-        min_occurrences = st.number_input("Min. počet výskytů fráze", min_value=1, max_value=100, value=2, step=1)
+        min_occurrences = st.number_input("Min. počet výskytů fráze", min_value=1, max_value=100, value=1, step=1)
         run_button = st.button("Spustit analýzu", type="primary")
 
     tickers = tuple(_parse_tickers(tickers_text))

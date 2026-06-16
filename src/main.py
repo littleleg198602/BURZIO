@@ -18,18 +18,18 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--tickers", nargs="+", default=list(DEFAULT_TICKERS), help="Ticker symbols to analyze.")
     parser.add_argument("--db", default=str(AppConfig().db_path), help="SQLite database path.")
     parser.add_argument("--output", default=str(AppConfig().excel_path), help="Excel output path.")
-    parser.add_argument("--min-occurrences", type=int, default=2, help="Minimum phrase observations to include.")
+    parser.add_argument("--min-occurrences", type=int, default=1, help="Minimum phrase observations to include.")
     return parser.parse_args()
 
 
-def run(config: AppConfig, min_occurrences: int = 2) -> None:
+def run(config: AppConfig, min_occurrences: int = 1) -> None:
     """Run the full cache, analyze, and export workflow."""
     _ensure_parent(config.db_path)
     _ensure_parent(config.excel_path)
     db = Database(config.db_path)
     for ticker in config.tickers:
         price_count = load_prices(db, ticker, config.price_period, config.price_interval)
-        news_count = load_news(db, ticker)
+        news_count = load_news(db, ticker, config.news_lookback_years)
         reaction_count = analyze_reactions(db, ticker, config.reaction_windows)
         print(f"{ticker}: cached {price_count} price rows, {news_count} new news rows, {reaction_count} reactions")
     phrase_count = calculate_phrase_stats(db, config.tickers, min_occurrences=min_occurrences)

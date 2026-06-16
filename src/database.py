@@ -8,7 +8,7 @@ from typing import Iterable, Iterator, Sequence
 
 PriceRow = tuple[str, str, float | None, float | None, float | None, float | None, float | None, int | None]
 NewsRow = tuple[str, str, str, str, str, str]
-ReactionRow = tuple[str, str, str, int, float | None]
+ReactionRow = tuple[str, str, str, int, float | None, float | None, float | None]
 PhraseStatRow = tuple[str, int, str, int, float, float, float, float]
 
 
@@ -33,6 +33,7 @@ class Database:
     def initialize(self) -> None:
         with self.connect() as conn:
             self._migrate_phrase_stats(conn)
+            self._migrate_reactions(conn)
             conn.executescript(
                 """
                 PRAGMA journal_mode=WAL;
@@ -62,6 +63,8 @@ class Database:
                     news_date TEXT NOT NULL,
                     window_days INTEGER NOT NULL,
                     return_pct REAL,
+                    start_price REAL,
+                    end_price REAL,
                     PRIMARY KEY (ticker, guid, window_days)
                 );
                 CREATE TABLE IF NOT EXISTS phrase_stats (
@@ -82,6 +85,11 @@ class Database:
         columns = [row["name"] for row in conn.execute("PRAGMA table_info(phrase_stats)").fetchall()]
         if columns and "window_days" not in columns:
             conn.execute("DROP TABLE phrase_stats")
+
+    def _migrate_reactions(self, conn: sqlite3.Connection) -> None:
+        columns = [row["name"] for row in conn.execute("PRAGMA table_info(reactions)").fetchall()]
+        if columns and ("start_price" not in columns or "end_price" not in columns):
+            conn.execute("DROP TABLE reactions")
 
     def upsert_prices(self, rows: Iterable[PriceRow]) -> None:
         rows = list(rows)
@@ -120,9 +128,12 @@ class Database:
         with self.connect() as conn:
             conn.executemany(
                 """
-                INSERT INTO reactions VALUES (?, ?, ?, ?, ?)
+                INSERT INTO reactions VALUES (?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(ticker, guid, window_days) DO UPDATE SET
-                    news_date=excluded.news_date, return_pct=excluded.return_pct
+                    news_date=excluded.news_date,
+                    return_pct=excluded.return_pct,
+                    start_price=excluded.start_price,
+                    end_price=excluded.end_price
                 """,
                 rows,
             )

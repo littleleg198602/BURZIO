@@ -11,6 +11,8 @@ DEFAULT_EXCEL_PATH = Path("data/news_impact_yahoo.xlsx")
 PRICE_PERIOD = "5y"
 PRICE_INTERVAL = "1d"
 YAHOO_RSS_URL = "https://feeds.finance.yahoo.com/rss/2.0/headline?s={ticker}&region=US&lang=en-US"
+NEWS_LOOKBACK_YEARS = 5
+YAHOO_SEARCH_NEWS_COUNT = 100
 
 
 @dataclass(frozen=True)
@@ -23,3 +25,4 @@ class AppConfig:
     price_period: str = PRICE_PERIOD
     price_interval: str = PRICE_INTERVAL
     reaction_windows: tuple[int, ...] = REACTION_WINDOWS
+    news_lookback_years: int = NEWS_LOOKBACK_YEARS
